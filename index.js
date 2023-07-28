@@ -111,4 +111,4 @@ app.listen(port, () => {
   console.log("Listening on port ", port);
 });
 
-module.exports = { calculateBMI, calculateBMIStats };
+// module.exports = { calculateBMI, calculateBMIStats };
