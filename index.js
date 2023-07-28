@@ -19,7 +19,6 @@ const fs = require("fs");
 const app = express();
 const port = process.env.PORT || 3000;
 
-
 app.set("views", "views");
 app.set("view engine", "hbs");
 app.use(express.static("public"));
@@ -65,19 +64,42 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-// handle a post request from home.hbs form
+// Function to calculate BMI
+function calculateBMI(height, weight) {
+  if (!isNaN(height) && !isNaN(weight)) {
+    return weight / (height * height);
+  }
+  return null; // Return null if either height or weight is not a valid number
+}
+
+// Express route handler
 app.post("/", (req, res) => {
   const height = Number(req.body.height);
   const weight = Number(req.body.weight);
 
-  if (!isNaN(height) && !isNaN(weight)) {
-    const bmi = weight / (height * height);
+  const bmi = calculateBMI(height, weight);
+
+  if (bmi !== null) {
     bmiData.push({ height, weight, bmi });
     saveBMIData(bmiData);
   }
 
   res.redirect("/reports");
 });
+
+// handle a post request from home.hbs form
+// app.post("/", (req, res) => {
+//   const height = Number(req.body.height);
+//   const weight = Number(req.body.weight);
+
+//   if (!isNaN(height) && !isNaN(weight)) {
+//     const bmi = weight / (height * height);
+//     bmiData.push({ height, weight, bmi });
+//     saveBMIData(bmiData);
+//   }
+
+//   res.redirect("/reports");
+// });
 
 // get reports from calculation returned from calculateBMIStats function
 app.get("/reports", (req, res) => {
@@ -88,3 +110,5 @@ app.get("/reports", (req, res) => {
 app.listen(port, () => {
   console.log("Listening on port ", port);
 });
+
+module.exports = { calculateBMI, calculateBMIStats };
